@@ -1,0 +1,25 @@
+name: Water Reminder
+
+on:
+  schedule:
+    - cron: "5 9,10,11,12,13,14,15,16,17,18,19,20,21 * * *"
+      timezone: "Asia/Singapore"
+
+  # Lets you test it manually
+  workflow_dispatch:
+
+jobs:
+  remind:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Send Telegram reminder
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+        run: |
+          curl -s -X POST \
+            "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            -d "chat_id=${CHAT_ID}" \
+            --data-urlencode "text=💧 Water break! Drink a glass of water."
